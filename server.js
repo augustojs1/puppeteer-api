@@ -3,12 +3,12 @@ const dotenv = require('dotenv');
 var cors = require('cors');
 const app = express();
 
-dotenv.config({ path: './config/config.env' });
-
-const puppeteerRoute = require('./routes/puppeteer.route');
-app.use(puppeteerRoute);
+dotenv.config({ path: './src/config/config.env' });
 
 app.use(express.json());
+
+const puppeteerRoute = require('./src/routes/puppeteer.route');
+app.use(puppeteerRoute);
 
 app.options(cors());
 
