@@ -8,7 +8,7 @@ exports.createPuppeteerEvent = async (req, res) => {
         puppeteerService.puppeteerService(req.body);
         
         res.status(201).json({ success: true, message: "Sent to puppeteer", data: req.body })
-        console.log(req.body);
+        // console.log(req.body);
     } catch (error) {
         res.status(400).json({ success: false, error: error.message })
         console.log(error.message);
