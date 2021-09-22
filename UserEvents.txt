@@ -1,1 +1,1 @@
-{"type":"change","target":"input"}
+{"type":"change","taget":"input"}|{"type":"change","taget":"input"}|{"type":"change","taget":"input"}|{"type":"change","taget":"input"}|
