@@ -1,24 +1,16 @@
 const puppeteer = require("puppeteer");
 
 const targetSelector = (target) => {
-  console.log("Oláaaaaa");
   if (target.id) {
-    console.log(`#${target.id}`);
     return `#${target.id}`;
   } else if (target.name) {
-    console.log(`#${target.name}`);
     return `[name="${target.name}"]`;
   } else if (target.class) {
-    console.log(`#${target.class}`);
     return `.${target.class}`;
   }
 };
 
 exports.puppeteerService = async (userEvents) => {
-  // console.log(`Ações do usuário no Puppeteer: ${JSON.stringify(userEvents)}`);
-
-  // console.log(userEvents)
-
   const events = userEvents.eventsTeste;
 
   (async () => {
@@ -29,41 +21,44 @@ exports.puppeteerService = async (userEvents) => {
     const page = await browser.newPage();
     await page.goto(events[0].URL);
     console.log("Abriu a página");
-    //espera a página carregar
-    //await page.waitForNavigation();
-    console.log("Esperou a navegação");
 
-    events.map(async (event, index) => {
+    for (let i = 0; events.length > i; i++) {
+      let event = events[i];
       console.log(event);
       console.log("Entrou no map");
 
       if (event.type === "click") {
-        if (index !== 0) {
-          if (event.URL !== events[index - 1].URL) {
+        if (i !== 0) {
+          if (event.URL !== events[i - 1].URL) {
             await page.goto(event.URL);
-            await page.waitForNavigation();
           }
         }
 
-        //esperar o seletor carregar
-        await page.waitForSelector(targetSelector(event.target));
-        await page.click(targetSelector(event.target));
+        if (event.target.tag === "a") {
+          await page.goto(event.target.href);
+        } else {
+          //esperar o seletor carregar
+          await page.waitForSelector(targetSelector(event.target));
+
+          await page.click(targetSelector(event.target));
+        }
       }
       if (event.type === "change") {
-        if (index !== 0) {
-          if (event.URL !== events[index - 1].URL) {
+        if (i !== 0) {
+          if (event.URL !== events[i - 1].URL) {
             await page.goto(event.URL);
-            await page.waitForNavigation();
           }
         }
 
-        //esperar o seletor carregar
+        await page.waitForSelector(targetSelector(event.target));
+        await page.click(targetSelector(event.target));
+
         await page.waitForSelector(targetSelector(event.target));
         await page.type(targetSelector(event.target), event.value);
 
-        console.log("Input");
+        //esperar o seletor carregar
       }
-    });
+    }
   })();
 };
 
