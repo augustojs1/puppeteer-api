@@ -17,7 +17,7 @@ const targetSelector = (target) => {
 exports.puppeteerService = async (userEvents) => {
   // console.log(`Ações do usuário no Puppeteer: ${JSON.stringify(userEvents)}`);
 
-  // console.log(userEvents)
+  console.log(userEvents);
 
   const events = userEvents.eventsTeste;
 
@@ -41,19 +41,21 @@ exports.puppeteerService = async (userEvents) => {
         if (index !== 0) {
           if (event.URL !== events[index - 1].URL) {
             await page.goto(event.URL);
-            await page.waitForNavigation();
           }
         }
 
-        //esperar o seletor carregar
-        await page.waitForSelector(targetSelector(event.target));
-        await page.click(targetSelector(event.target));
+        if (event.target.tag === "a") {
+          await page.goto(event.target.href);
+        } else {
+          //esperar o seletor carregar
+          await page.waitForSelector(targetSelector(event.target));
+          await page.click(targetSelector(event.target));
+        }
       }
       if (event.type === "change") {
         if (index !== 0) {
           if (event.URL !== events[index - 1].URL) {
             await page.goto(event.URL);
-            await page.waitForNavigation();
           }
         }
 
