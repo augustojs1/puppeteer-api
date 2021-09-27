@@ -1,3 +1,4 @@
+const fs = require("fs");
 const puppeteer = require("puppeteer");
 
 const targetSelector = (target) => {
@@ -60,6 +61,17 @@ exports.puppeteerService = async (userEvents) => {
       }
     }
   })();
+};
+
+exports.saveScriptToFile = async (userEvents) => {
+  fs.writeFile(
+    "../database/UserEventsScript.json",
+    JSON.stringify(userEvents),
+    function (err) {
+      if (err) throw err;
+      console.log("Script saved into the database!");
+    }
+  );
 };
 
 /* 
