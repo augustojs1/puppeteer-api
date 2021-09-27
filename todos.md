@@ -2,8 +2,8 @@
 
 ## API
 
-- [] Persistência dos eventos em arquivo
-- [] Fazer Puppeteet interagir com select
+- [ x] Persistência dos eventos em arquivo
+- [ ] Fazer Puppeteer interagir com select
 
 ## Popup
 

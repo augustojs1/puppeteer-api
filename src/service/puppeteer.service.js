@@ -1,7 +1,4 @@
-const fs = require("fs");
-const path = require("path");
 const puppeteer = require("puppeteer");
-const generateRandomString = require("../utils/GenerateRandomString");
 
 const targetSelector = (target) => {
   if (target.id) {
@@ -63,24 +60,6 @@ exports.puppeteerService = async (userEvents) => {
       }
     }
   })();
-};
-
-exports.saveScriptToFile = async (userEvents) => {
-  const randomString = generateRandomString();
-
-  fs.writeFileSync(
-    path.join(
-      __dirname,
-      "..",
-      "database",
-      `UserEventsScript-${randomString}.json`
-    ),
-    JSON.stringify(userEvents),
-    function (err) {
-      if (err) throw err;
-      console.log("Script saved into the database!");
-    }
-  );
 };
 
 /* 
