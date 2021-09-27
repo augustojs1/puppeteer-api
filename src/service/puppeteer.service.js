@@ -16,6 +16,8 @@ exports.puppeteerService = async (userEvents) => {
   (async () => {
     const browser = await puppeteer.launch({
       headless: false,
+      args: ["--window-size=1920,1080"],
+      defaultViewport: null,
     });
 
     const page = await browser.newPage();
@@ -23,9 +25,9 @@ exports.puppeteerService = async (userEvents) => {
     console.log("Abriu a página");
 
     for (let i = 0; events.length > i; i++) {
+      // console.log("entrou no FOR")
       let event = events[i];
       console.log(event);
-      console.log("Entrou no map");
 
       if (event.type === "click") {
         if (i !== 0) {
@@ -36,25 +38,54 @@ exports.puppeteerService = async (userEvents) => {
 
         if (event.target.tag === "a") {
           await page.goto(event.target.href);
+        } else if (event.target.tag === "select") {
+          await page.waitForSelector(targetSelector(event.target), {
+            visible: true,
+          });
+          await page.click(targetSelector(event.target));
+
+          await page.waitForSelector(`[value="${event.target.value}"]`, {
+            visible: true,
+          });
+          await page.click(`[value="${event.target.value}"]`);
         } else {
           //esperar o seletor carregar
-          await page.waitForSelector(targetSelector(event.target));
+          await page.waitForSelector(targetSelector(event.target), {
+            visible: true,
+          });
 
           await page.click(targetSelector(event.target));
         }
       }
       if (event.type === "change") {
+        console.log("Caiu no change");
         if (i !== 0) {
           if (event.URL !== events[i - 1].URL) {
             await page.goto(event.URL);
           }
         }
 
-        await page.waitForSelector(targetSelector(event.target));
-        await page.click(targetSelector(event.target));
+        if (event.target.tag === "select") {
+          await page.waitForSelector(targetSelector(event.target), {
+            visible: true,
+          });
+          await page.click(targetSelector(event.target));
 
-        await page.waitForSelector(targetSelector(event.target));
-        await page.type(targetSelector(event.target), event.value);
+          await page.waitForSelector(`[value="${event.target.value}"]`, {
+            visible: true,
+          });
+          await page.click(`[value="${event.target.value}"]`);
+        } else {
+          await page.waitForSelector(targetSelector(event.target), {
+            visible: true,
+          });
+          await page.click(targetSelector(event.target));
+
+          await page.waitForSelector(targetSelector(event.target), {
+            visible: true,
+          });
+          await page.type(targetSelector(event.target), event.target.value);
+        }
 
         //esperar o seletor carregar
       }
